@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>PoolBet – Demo (v9)</title>
+  <title>PoolBet – Demo (v10)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -39,7 +39,7 @@
       <div class="flex items-center gap-3">
         <img src="favicon.svg" class="h-8 w-8 rounded-md" alt="logo"/>
         <div class="font-semibold text-lg">PoolBet</div>
-        <span class="muted small hidden sm:inline">v9</span>
+        <span class="muted small hidden sm:inline">v10</span>
       </div>
       <div class="flex items-center gap-3">
         <button id="btn-create" class="btn btn-ghost">Create Pool</button>
@@ -105,11 +105,14 @@
     </section>
   </main>
 
-  <!-- Create Pool Modal -->
+  <!-- Create Pool Modal (with coin-reactive chart) -->
   <div id="modal-create" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4">
     <div class="card p-4 shadow-soft max-w-xl w-full">
       <div class="flex items-center justify-between"><div class="font-semibold text-lg">Create Pool</div><button id="modal-create-close" class="muted">✕</button></div>
       <div class="grid md:grid-cols-2 gap-3 mt-3">
+        <div class="md:col-span-2">
+          <canvas id="cp-chart" height="120"></canvas>
+        </div>
         <div><div class="small muted mb-1">Pool Name</div><input id="cp-name" class="input" placeholder="e.g. BTC Lunch Pump"/></div>
         <div><div class="small muted mb-1">Coin</div><select id="cp-coin" class="input"><option>BTC</option><option>ETH</option><option>SOL</option><option>ARB</option><option>AVAX</option><option>DOGE</option><option>MATIC</option><option>ADA</option></select></div>
         <div><div class="small muted mb-1">Target Price (USDC)</div><input id="cp-price" type="number" class="input"/></div>
@@ -140,9 +143,9 @@
     </div>
   </div>
 
-  <!-- Pool Status Modal (with full chart) -->
+  <!-- Pool Status Modal (with full chart + per-participant columns) -->
   <div id="modal-status" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4">
-    <div class="card p-4 shadow-soft max-w-3xl w-full">
+    <div class="card p-4 shadow-soft max-w-4xl w-full">
       <div class="flex items-center justify-between"><div id="status-title" class="font-semibold text-lg">Pool Status</div><button id="modal-status-close" class="muted">✕</button></div>
       <div id="status-body" class="mt-3"></div>
       <div class="mt-3">
