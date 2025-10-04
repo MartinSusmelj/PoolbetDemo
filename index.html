@@ -1,63 +1,117 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>PoolBet – Demo (Static)</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{bg:'#0B0F1A',panel:'#101626',accent:'#7C93F6',muted:'#98A2B3'},boxShadow:{soft:'0 10px 30px rgba(0,0,0,0.25)'}}}};</script>
-<link rel="icon" href="favicon.svg"/>
-<style>:root{color-scheme:dark}html,body{height:100%;background:#0B0F1A}.card{background:#101626;border:1px solid rgba(255,255,255,0.06);border-radius:12px}.input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;outline:none;width:100%}.btn{padding:10px 14px;border-radius:10px}.btn-accent{background:#7C93F6;color:#000}.btn-ghost{background:rgba(255,255,255,0.08)}.badge{padding:2px 8px;border-radius:999px;font-size:12px}</style>
-</head><body class="text-white">
-<header class="border-b border-white/10 bg-[#0D1424]/60 backdrop-blur"><div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-  <div class="flex items-center gap-3"><img src="favicon.svg" class="h-8 w-8 rounded-md"/><div class="font-semibold">PoolBet</div><span class="text-muted text-sm hidden sm:inline">Demo</span></div>
-  <div class="flex items-center gap-3"><button id="btn-create" class="btn btn-ghost">Create Pool</button><button id="btn-connect" class="btn btn-accent">Connect Wallet</button></div>
-</div></header>
-
-<main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
-
-<section class="card p-4 shadow-soft">
-  <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 w-full">
-      <div><div class="text-xs text-muted mb-1">Search</div><input id="f-search" class="input" placeholder="name, coin…"/></div>
-      <div><div class="text-xs text-muted mb-1">Coin</div><select id="f-coin" class="input"><option value="">All</option><option>BTC</option><option>ETH</option><option>SOL</option><option>ARB</option><option>AVAX</option><option>DOGE</option><option>MATIC</option><option>ADA</option></select></div>
-      <div><div class="text-xs text-muted mb-1">Buy-in (≤)</div><input id="f-buy" class="input" type="number" placeholder="e.g. 25"/></div>
-      <div><div class="text-xs text-muted mb-1">Status</div><select id="f-status" class="input"><option value="">All</option><option>OPEN</option><option>LOCKED</option><option>RUNNING</option><option>RESOLVED</option></select></div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PoolBet – Demo (Updated)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{bg:'#0B0F1A',panel:'#101626',accent:'#7C93F6',muted:'#98A2B3'},boxShadow:{soft:'0 10px 30px rgba(0,0,0,0.25)'}}}};</script>
+  <link rel="icon" href="favicon.svg"/>
+  <style>
+    :root{color-scheme:dark}html,body{height:100%;background:#0B0F1A} .card{background:#101626;border:1px solid rgba(255,255,255,0.06);border-radius:12px}
+    .input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;outline:none;width:100%}
+    .btn{padding:10px 14px;border-radius:10px} .btn-accent{background:#7C93F6;color:#000} .btn-ghost{background:rgba(255,255,255,0.08)}
+    .muted{color:#98A2B3} .small{font-size:12px}
+  </style>
+</head>
+<body class="text-white">
+  <!-- Navbar -->
+  <header class="border-b border-white/10 bg-[#0D1424]/60 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="favicon.svg" class="h-8 w-8 rounded-md" alt="logo"/>
+        <div class="font-semibold">PoolBet</div>
+        <span class="muted small hidden sm:inline">Demo</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="btn-create" class="btn btn-ghost">Create Pool</button>
+        <button id="btn-connect" class="btn btn-accent">Connect Wallet</button>
+      </div>
     </div>
-    <div class="flex gap-2"><button id="f-reset" class="btn btn-ghost">Reset</button><button id="f-apply" class="btn btn-accent">Apply Filters</button></div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <!-- Controls -->
+    <section class="card p-4 shadow-soft flex items-center justify-between gap-4">
+      <div>
+        <div class="small muted">Search / Filter (demo)</div>
+        <input id="f-search" class="input mt-2" placeholder="search name or coin" />
+      </div>
+      <div class="flex gap-3 items-center">
+        <div class="small muted">Your wallet:</div>
+        <div id="wallet-info" class="card p-2 px-3 small">Not connected</div>
+      </div>
+      <div class="flex gap-3 items-center">
+        <div class="small muted">Your stats</div>
+        <div id="user-stats" class="card p-2 px-3 small">Wins:0 Losses:0 Balance:0</div>
+      </div>
+    </section>
+
+    <section class="grid lg:grid-cols-3 gap-4">
+      <div class="card p-3 shadow-soft lg:col-span-2">
+        <div class="font-semibold">Market Overview</div>
+        <div class="muted small mt-1">Charts removed for demo stability — focus on pool UX</div>
+        <div class="mt-4 grid grid-cols-3 gap-3">
+          <div class="card p-3"><div class="muted small">TVL</div><div class="font-semibold">$128,540</div></div>
+          <div class="card p-3"><div class="muted small">Active Pools</div><div class="font-semibold" id="active-count">0</div></div>
+          <div class="card p-3"><div class="muted small">Players (24h)</div><div class="font-semibold">1,204</div></div>
+        </div>
+      </div>
+
+      <div class="card p-3 shadow-soft">
+        <div class="font-semibold">Join Pool</div>
+        <div class="muted small mt-1">Select a pool on the left to join</div>
+        <div id="join-panel" class="mt-3">
+          <div class="muted small">No pool selected</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="flex items-center justify-between mb-2">
+        <div class="font-semibold">All Pools</div>
+        <div class="small muted"><span id="all-count">0</span> total</div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4" id="all-list"></div>
+    </section>
+  </main>
+
+  <!-- Modals -->
+  <div id="modal-create" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4">
+    <div class="card p-4 shadow-soft max-w-xl w-full">
+      <div class="flex items-center justify-between"><div class="font-semibold text-lg">Create Pool</div><button id="modal-create-close" class="muted">✕</button></div>
+      <div class="grid md:grid-cols-2 gap-3 mt-3">
+        <div><div class="small muted mb-1">Pool Name</div><input id="cp-name" class="input" placeholder="e.g. BTC Lunch Pump" /></div>
+        <div><div class="small muted mb-1">Coin</div><select id="cp-coin" class="input"><option>BTC</option><option>ETH</option><option>SOL</option><option>ARB</option></select></div>
+        <div><div class="small muted mb-1">Target Price (USDC)</div><input id="cp-price" type="number" class="input" /></div>
+        <div><div class="small muted mb-1">Target Time</div><input id="cp-datetime" type="datetime-local" class="input" /></div>
+        <div><div class="small muted mb-1">Min Buy-in (USDC)</div><input id="cp-buyin" type="number" class="input" /></div>
+        <div><div class="small muted mb-1">Registration Window (minutes)</div><input id="cp-window" type="number" class="input" /></div>
+      </div>
+      <div class="mt-4 flex justify-end gap-2"><button id="cp-cancel" class="btn btn-ghost">Cancel</button><button id="cp-create" class="btn btn-accent">Create Pool</button></div>
+      <div id="cp-msg" class="muted small mt-2"></div>
+    </div>
   </div>
-</section>
 
-<section class="grid lg:grid-cols-3 gap-4">
-  <div class="card p-3 shadow-soft lg:col-span-2">
-    <div class="flex items-center justify-between px-1 pb-2"><div class="font-semibold" id="chart-title">BTC/USDC</div><div class="text-muted text-xs">Live (CoinGecko) – fallback mock if blocked</div></div>
-    <div id="chart" style="height:380px"></div>
-    <div class="mt-3 flex gap-2 text-sm"><button data-tf="1" class="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 tf">1D</button><button data-tf="7" class="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 tf">7D</button><button data-tf="30" class="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 tf">30D</button><button data-tf="90" class="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 tf">90D</button></div>
+  <div id="modal-join" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4">
+    <div class="card p-4 shadow-soft max-w-md w-full">
+      <div class="flex items-center justify-between"><div class="font-semibold text-lg">Join Pool</div><button id="modal-join-close" class="muted">✕</button></div>
+      <div class="mt-3">
+        <div id="join-pool-name" class="font-semibold"></div>
+        <div class="muted small" id="join-pool-info"></div>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button id="bet-up" class="btn btn-ghost">Bet UP</button>
+          <button id="bet-down" class="btn btn-ghost">Bet DOWN</button>
+        </div>
+        <div class="mt-3"><div class="small muted mb-1">Amount (USDC)</div><input id="bet-amount" type="number" class="input" placeholder="10" /></div>
+        <div class="mt-4 flex justify-end"><button id="bet-cancel" class="btn btn-ghost">Cancel</button><button id="bet-confirm" class="btn btn-accent">Confirm Bet</button></div>
+        <div id="bet-msg" class="muted small mt-2"></div>
+      </div>
+    </div>
   </div>
-  <div class="card p-3 shadow-soft">
-    <div class="flex items-center justify-between"><div class="font-semibold">Join Pool</div><div class="text-xs text-muted"><span id="join-count">0</span> shown</div></div>
-    <div class="mt-2" id="join-list"></div>
-  </div>
-</section>
 
-<section>
-  <div class="flex items-center justify-between mb-2"><div class="font-semibold">All Pools</div><div class="text-xs text-muted"><span id="all-count">0</span> total</div></div>
-  <div class="grid md:grid-cols-3 gap-4" id="all-list"></div>
-</section>
+  <div id="popup" class="fixed bottom-6 right-6 bg-[#0D1424] border border-white/10 p-3 rounded-md hidden shadow-soft small"></div>
 
-</main>
-
-<div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4"><div class="card p-4 shadow-soft max-w-xl w-full">
-  <div class="flex items-center justify-between"><div class="font-semibold text-lg">Create Pool</div><button id="modal-close" class="text-muted">✕</button></div>
-  <div class="grid md:grid-cols-2 gap-3 mt-3">
-    <div><div class="text-xs text-muted mb-1">Pool Name</div><input id="cp-name" class="input" placeholder="e.g. BTC Lunch Pump"/></div>
-    <div><div class="text-xs text-muted mb-1">Coin</div><select id="cp-coin" class="input"><option>BTC</option><option>ETH</option><option>SOL</option><option>ARB</option><option>AVAX</option><option>DOGE</option><option>MATIC</option><option>ADA</option></select></div>
-    <div><div class="text-xs text-muted mb-1">Target Price (USDC)</div><input id="cp-price" type="number" class="input" placeholder="e.g. 60500"/></div>
-    <div><div class="text-xs text-muted mb-1">Target Time</div><input id="cp-datetime" type="datetime-local" class="input"/></div>
-    <div><div class="text-xs text-muted mb-1">Min Buy-in (USDC)</div><input id="cp-buyin" type="number" class="input" placeholder="e.g. 10"/></div>
-    <div><div class="text-xs text-muted mb-1">Registration Window (minutes)</div><input id="cp-window" type="number" class="input" placeholder="e.g. 60"/></div>
-  </div>
-  <div class="mt-4 flex justify-end gap-2"><button id="cp-cancel" class="btn btn-ghost">Cancel</button><button id="cp-create" class="btn btn-accent">Create</button></div>
-  <div class="text-xs text-muted mt-2">Note: This is a static demo – wire these fields to on-chain calls in your dApp.</div>
-</div></div>
-
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-<script src="app.js"></script>
-</body></html>
+  <script src="app-updated.js"></script>
+</body>
+</html>
